@@ -10,7 +10,6 @@ class Matrix
 private:
     std::array<std::array<T, M>, N> _matrix;
 
-
 public:
     // Iterator
     class Iterator
@@ -19,10 +18,10 @@ public:
         // STL properties for an Iterator | https://en.cppreference.com/w/cpp/iterator/iterator_tags
         // Tags are important for the STL alogrithms to work efficiently.
         using iterator_category = std::forward_iterator_tag;
-        using difference_type = std::ptrdiff_t; 
+        using difference_type = std::ptrdiff_t;
         using value_type = T;
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = value_type *;
+        using reference = value_type &;
 
         // All iterators must be constructible, copy-constructible, copy-assignable, destructible and swappable
 
@@ -31,43 +30,78 @@ public:
 
         // Operators
 
-        reference operator * () const
+        reference operator*() const
         {
             return *_ptr;
         }
 
-        pointer operator -> ()
+        pointer operator->()
         {
             return _ptr;
         }
 
         // prefix increment
-    Iterator &operator++()
-    {
-        // Works since arrays are one block of memory.
-        ++_ptr;
-        return *this;
-    }
+        Iterator &operator++()
+        {
+            // Works since arrays are one block of memory.
+            _ptr = _ptr + 1;
+            return *this;
+        }
         // postfix increment
-        Iterator& operator ++ (int)
+        Iterator &operator++(int)
         {
             Iterator thisTemp = *this;
-                ++(*this);
-                return thisTemp; 
-            
+            ++(*this);
+            return thisTemp;
         }
 
-        bool operator == (const Iterator& other) const
+        Iterator operator -- ()
+        {
+            _ptr = _ptr - 1;
+            return *this;
+        }
+
+        Iterator operator -- (int)
+        {
+            Iterator thisTmp = *this;
+            --(*this);
+            return thisTmp;
+        }
+
+        bool operator==(const Iterator &other) const
         {
             return (_ptr == other._ptr);
         }
 
-        bool operator != (const Iterator& other) const
+        bool operator!=(const Iterator &other) const
         {
             return !(*this == other);
         }
 
+        bool operator < (const Iterator& other)
+        {
+            return (_ptr < other._ptr);
+        }
 
+        bool operator > (const Iterator& other)
+        {
+            return (_ptr > other._ptr);
+        }
+
+        difference_type operator-(const Iterator &other) const
+        {
+            return _ptr - other._ptr;
+        }
+
+        Iterator operator+(difference_type n) const
+        {
+            return Iterator(_ptr + n);
+        }
+
+        Iterator operator-(difference_type n) const
+        {
+            return Iterator(_ptr - n);
+        }
 
     private:
         pointer _ptr;
@@ -80,11 +114,10 @@ public:
 
     Iterator end()
     {
-        return Iterator(&_matrix[N-1][M]);
+        return Iterator(&_matrix[N - 1][M]);
     }
 
     ////////////////////////////////
-
 
     Matrix()
     {
@@ -236,6 +269,3 @@ std::ostream &operator<<(std::ostream &os, const Matrix<T, N, M> &matrix)
     }
     return os;
 }
-
-
-
