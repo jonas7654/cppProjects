@@ -80,7 +80,7 @@ public:
 
     Iterator end()
     {
-        return Iterator(&_matrix[N][M-1]);
+        return Iterator(&_matrix[N-1][M]);
     }
 
     ////////////////////////////////
