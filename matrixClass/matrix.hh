@@ -71,8 +71,6 @@ public:
 
     private:
         pointer _ptr;
-        pointer _colEnd;
-        pointer _rowEnd;
     };
 
     Iterator begin()
