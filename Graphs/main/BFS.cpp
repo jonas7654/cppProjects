@@ -3,14 +3,13 @@
 #include <array>
 #include <queue>
 #include <list>
-#include <sys/types.h>
 
 const int N = 10;
 using E_List = std::array<std::list<int>, N>;
 
 
 void printEList(const E_List& eList) {
-    for (std::size_t i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i) {
         std::cout << "List " << i << ": ";
         for (const int& value : eList[i]) {
             std::cout << value << " ";
@@ -19,20 +18,21 @@ void printEList(const E_List& eList) {
     }
 }
 
-std::list<int> BFS(E_List G, int v) {
+std::array<int, N> BFS(E_List G, int v) {
   std::queue<int> Q;
-  std::list<int> resultList;
+  std::array<int, N> resultList;
   std::array<bool, N> markedNodes;
   std::fill(markedNodes.begin(), markedNodes.end(), false);
 
   // BFS ausführen
   Q.push(v);
+  int index = 0;
   while(!Q.empty()) {
     v = Q.front();
     Q.pop();
     if (!markedNodes[v]) {
       markedNodes[v] = 1;
-      resultList.push_back(v);
+      resultList[index++] = v;
       
       for(int neighbour : G[v]) {
           Q.push(neighbour);
@@ -87,11 +87,11 @@ int main() {
 
     printEList(G);
 
-    std::list<int> result = BFS(G, 0);
+    std::array<int, N> result = BFS(G, 0);
 
-    for (const int& node : result) {
-        std::cout << node << " ";
-    }
+    for(int i = 0; i < N; i++) {
+    std::cout << result[i] << " " ;
+  }
     std::cout << std::endl;
 
     return 0;
