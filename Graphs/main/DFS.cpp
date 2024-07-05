@@ -18,29 +18,40 @@ void printEList(const E_List& eList) {
     }
 }
 
-std::array<int, N> DFS(E_List G,int v) {
-  std::array<bool, N> markedNodes;
-  std::array<int, N> PreOrder;
-  std::fill(markedNodes.begin(), markedNodes.end(), false);
-  std::stack<int> S;
 
-  S.push(v);
-  while(!S.empty()) {
-    v = S.top();
-    S.pop();
-    if(!markedNodes[v]) {
-      markedNodes[v] = true;
-      for (int neighbour : G[v]) {
-        if (!markedNodes[neighbour]) {
-          S.push(neighbour);
-        }
-      }
+void DFS_recursive(E_List G, int v, std::array<bool, N> &markedNodes) {
+  markedNodes[v] = true;
+  std::cout << v << " ";
+  for (int neighbour : G[v]) {
+    if(!markedNodes[neighbour]) {
+      DFS_recursive(G, neighbour, markedNodes);
     }
   }
-
 }
 
+void DFS_iterative(E_List G, int v) {
+  std::array<int, N> markedNodes;
+  std::stack<int> S;
+  std::fill(markedNodes.begin(), markedNodes.end(), false);
 
+
+  S.push(v);
+
+  while(!S.empty()) {
+    v  = S.top();
+    S.pop();
+
+    markedNodes[v] = true;
+
+    for (int neighbour : G[v]) {
+      if (!markedNodes[neighbour]) {
+        S.push(neighbour);
+      }
+    }
+    std::cout << v << " ";
+  }
+  
+}
 
 
 int main() {
@@ -82,16 +93,17 @@ int main() {
     
     // Node 9
     G[9].push_back(8);
-
-    printEList(G);
-
-    std::array<int, N> result = BFS(G, 0);
-
-    for(int i = 0; i < N; i++) {
-    std::cout << result[i] << " " ;
-  }
+    
+    std::array<bool, N> markedNodes;
+    std::fill(markedNodes.begin(), markedNodes.end(), false);
+    std::cout << "----------------Recursive-------------------" << std::endl;
+    DFS_recursive(G, 0, markedNodes);
+  
     std::cout << std::endl;
-
+    std::cout << "----------------Iterative-------------------" << std::endl;
+    
+    DFS_iterative(G, 0);
+    std::cout << std::endl;
     return 0;
 }
 
