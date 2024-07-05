@@ -3,6 +3,7 @@
 #include <array>
 #include <queue>
 #include <list>
+#include <utility>
 
 const int N = 10;
 using E_List = std::array<std::list<int>, N>;
@@ -18,31 +19,39 @@ void printEList(const E_List& eList) {
     }
 }
 
-std::array<int, N> BFS(E_List G, int v) {
+std::pair<std::array<int, N>, std::array<int, N>>BFS(E_List G, int v) {
+  
+
+  std::pair<std::array<int, N>, std::array<int, N>> results;
   std::queue<int> Q;
   std::array<int, N> resultList;
   std::array<bool, N> markedNodes;
+  std::array<int, N> parent;
   std::fill(markedNodes.begin(), markedNodes.end(), false);
 
   // BFS ausführen
   Q.push(v);
+  parent[v] = v;
+
   int index = 0;
+  
   while(!Q.empty()) {
     v = Q.front();
     Q.pop();
     if (!markedNodes[v]) {
       markedNodes[v] = 1;
       resultList[index++] = v;
-      
       for(int neighbour : G[v]) {
           if(!markedNodes[neighbour]) {
           Q.push(neighbour);
+          parent[neighbour] = v;
         }
       }
     }
   }
-
-  return resultList;
+  
+  results = std::make_pair(resultList, parent);
+  return results;
 }
 
 
@@ -90,11 +99,16 @@ int main() {
 
     printEList(G);
 
-    std::array<int, N> result = BFS(G, 0);
+    std::pair<std::array<int, N>, std::array<int, N>> result = BFS(G, 0);
 
     for(int i = 0; i < N; i++) {
-    std::cout << result[i] << " " ;
-  }
+    std::cout << result.first[i] << " " ;
+    }
+    std::cout << "--------------------------------------------------------------------------------" <<std::endl;
+    
+    for(int i = 0; i < N; i++) {
+      std::cout << result.second[i] << " ";
+    }
     std::cout << std::endl;
 
     return 0;
