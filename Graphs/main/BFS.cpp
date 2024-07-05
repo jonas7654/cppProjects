@@ -35,7 +35,9 @@ std::array<int, N> BFS(E_List G, int v) {
       resultList[index++] = v;
       
       for(int neighbour : G[v]) {
+          if(!markedNodes[neighbour]) {
           Q.push(neighbour);
+        }
       }
     }
   }
@@ -70,6 +72,7 @@ int main() {
     // Node 5 connections
     G[5].push_back(8);
     G[5].push_back(7);
+    G[5].push_back(6);
 
     // Node 6 connections
     G[6].push_back(5);
