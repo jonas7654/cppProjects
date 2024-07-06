@@ -3,6 +3,7 @@
 #include <array>
 #include <queue>
 #include <list>
+#include <tuple>
 #include <utility>
 
 const int N = 10;
@@ -19,38 +20,38 @@ void printEList(const E_List& eList) {
     }
 }
 
-std::pair<std::array<int, N>, std::array<int, N>>BFS(E_List G, int v) {
-  
+std::tuple<std::array<int, N>, std::array<int, N>, std::array<int,N>> BFS(E_List G, int v) { 
 
-  std::pair<std::array<int, N>, std::array<int, N>> results;
+  std::tuple<std::array<int, N>, std::array<int, N>, std::array<int,N>> results;
   std::queue<int> Q;
   std::array<int, N> resultList;
-  std::array<bool, N> markedNodes;
   std::array<int, N> parent;
-  std::fill(markedNodes.begin(), markedNodes.end(), false);
-
+  std::array<int, N> layer;
+  std::fill(parent.begin(), parent.end(), -1); // -1 => not visited
   // BFS ausführen
-  Q.push(v);
-  parent[v] = v;
+
 
   int index = 0;
+  Q.push(v);
+  layer[v] = 0;
+  parent[v] = v;
   
   while(!Q.empty()) {
     v = Q.front();
     Q.pop();
-    if (!markedNodes[v]) {
-      markedNodes[v] = 1;
+    
       resultList[index++] = v;
+
       for(int neighbour : G[v]) {
-          if(!markedNodes[neighbour]) {
+          if (parent[neighbour] == -1) {
           Q.push(neighbour);
           parent[neighbour] = v;
+          layer[neighbour] = layer[v] + 1;
         }
       }
-    }
   }
-  
-  results = std::make_pair(resultList, parent);
+
+  results = std::make_tuple(resultList, parent, layer);
   return results;
 }
 
@@ -87,7 +88,7 @@ int main() {
     G[6].push_back(5);
 
     // Node 7 connections
-    G[7].push_back(5);  // Node 4 connections
+    G[7].push_back(5);  // 
     G[7].push_back(8);
     // Node 8 connections
     G[8].push_back(9);
@@ -99,18 +100,25 @@ int main() {
 
     printEList(G);
 
-    std::pair<std::array<int, N>, std::array<int, N>> result = BFS(G, 0);
+    auto result = BFS(G,0);
 
-    for(int i = 0; i < N; i++) {
-    std::cout << result.first[i] << " " ;
-    }
-    std::cout << "--------------------------------------------------------------------------------" <<std::endl;
-    
-    for(int i = 0; i < N; i++) {
-      std::cout << result.second[i] << " ";
+    std::cout << "Pre Order: ";
+    for (int i = 0; i < N; i++) {
+        std::cout << std::get<0>(result)[i] << " ";
     }
     std::cout << std::endl;
 
+    std::cout << "Predecessors: ";
+    for (int i = 0; i < N; i++) {
+        std::cout << std::get<1>(result)[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Levels: ";
+    for (int i = 0; i < N; i++) {
+        std::cout << std::get<2>(result)[i] << " ";
+    }
+    std::cout << std::endl;
     return 0;
 }
 

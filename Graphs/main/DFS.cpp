@@ -30,22 +30,22 @@ void DFS_recursive(E_List G, int v, std::array<bool, N> &markedNodes) {
 }
 
 void DFS_iterative(E_List G, int v) {
-  std::array<int, N> markedNodes;
+  std::array<bool, N> markedNodes;
   std::stack<int> S;
   std::fill(markedNodes.begin(), markedNodes.end(), false);
 
 
   S.push(v);
+  markedNodes[v] = true;
 
   while(!S.empty()) {
     v  = S.top();
     S.pop();
 
-    markedNodes[v] = true;
-
     for (int neighbour : G[v]) {
       if (!markedNodes[neighbour]) {
         S.push(neighbour);
+        markedNodes[neighbour] = true;
       }
     }
     std::cout << v << " ";
@@ -84,7 +84,7 @@ int main() {
     G[6].push_back(5);
 
     // Node 7 connections
-    G[7].push_back(5);  // Node 4 connections
+    G[7].push_back(5);  
     G[7].push_back(8);
     // Node 8 connections
     G[8].push_back(9);
